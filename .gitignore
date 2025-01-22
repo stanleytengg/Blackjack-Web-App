@@ -1,0 +1,38 @@
+# Frontend: React
+node_modules/
+/frontend/build
+.pnp
+.pnp.js
+coverage/
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Backend: Django
+*.pyc
+__pycache__/
+db.sqlite3
+db.sqlite3-journal
+.env
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+ENV/
+env.bak/
+venv.bak/
+.python-version
+
+# IDE / Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
