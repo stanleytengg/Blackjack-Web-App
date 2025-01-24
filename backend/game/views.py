@@ -1,4 +1,3 @@
-# game/views.py
 from rest_framework import viewsets, status, permissions
 from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
@@ -70,8 +69,9 @@ class GameViewSet(viewsets.ModelViewSet):
         """ Start a new game with a bet """
         
         player = Player.objects.get(user=request.user)
-        bet = request.data.get('bet', 10) 
+        bet = request.data.get('bet', 10)
 
+        # Prevents bypass from the frontend
         if player.balance < bet:
             return Response(
                 {'error': 'Insufficient funds'}, 
@@ -107,6 +107,10 @@ class GameViewSet(viewsets.ModelViewSet):
         player.balance -= bet
         player.save()
         
+        # Updates player's stats if natural blackjack is hit
+        if initial_status == 'PLAYER_WON':
+            self.update_game_statistics(game, player)
+            
         serializer = self.get_serializer(game)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
     
