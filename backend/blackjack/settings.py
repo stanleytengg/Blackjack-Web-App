@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'corsheaders',
     'game',
+    'rest_framework_simplejwt'
 ]
 
 MIDDLEWARE = [
@@ -76,6 +77,12 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "blackjack.wsgi.application"
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+}
 
 
 # Database

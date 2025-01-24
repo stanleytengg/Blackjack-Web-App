@@ -107,6 +107,11 @@ class Gameplay:
             
         return deck, dealer_cards
     
-    
+    @staticmethod
+    def settling(game, player_bet):
+        if game.status == 'PLAYER_WON':
+            game.chips += player_bet
+        elif game.status == 'DEALER_WON':
+            game.chips -= player_bet
     
     
