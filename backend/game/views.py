@@ -3,7 +3,7 @@ from rest_framework.decorators import action, api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.contrib.auth import authenticate
-from .models import Game, Player
+from .models import BalanceHistory, Game, Player
 from .serializers import UserSerializer, PlayerSerializer, GameSerializer
 from .gameplay import Gameplay
 
@@ -50,8 +50,34 @@ def get_profile(request):
     """ Get user profile """
     
     player = Player.objects.get(user=request.user)
-    serializer = PlayerSerializer(player)
-    return Response(serializer.data)
+    win_rate = 0 
+    
+    if player.games_played > 0:
+        win_rate = round((player.games_won / player.games_played) * 100, 2)
+    
+    # Gets balance history and adds game number
+    balance_history = BalanceHistory.objects.filter(player=player).order_by('id')
+    balance_history_data = [
+        {
+            'balance': history.balance,
+            'game_number': idx + 1
+        } for idx, history in enumerate(balance_history)
+    ]
+    
+    # Manually formats the data
+    data = {
+        'username': player.user.username,
+        'balance': player.balance,
+        'games_played': player.games_played,
+        'games_won': player.games_won,
+        'total_won': player.total_won,
+        'total_lost': player.total_lost,
+        'net_profit': player.net_profit,
+        'win_rate': win_rate, 
+        'balance_history': balance_history_data
+    }
+    
+    return Response(data)
 
 class GameViewSet(viewsets.ModelViewSet):
     
@@ -136,6 +162,9 @@ class GameViewSet(viewsets.ModelViewSet):
         
         player.games_played += 1
         player.save()
+        
+        BalanceHistory.objects.create(player=player, balance=player.balance)
+        latest_history = BalanceHistory.objects.filter(player=player).order_by('-timestamp').first()
 
     @action(detail=True, methods=['post'])
     def hit(self, request, pk=None):

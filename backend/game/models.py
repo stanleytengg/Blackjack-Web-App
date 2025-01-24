@@ -13,8 +13,22 @@ class Player(models.Model):
     def net_profit(self):
         return self.total_won - self.total_lost
 
+    def log_balance_change(self):
+        BalanceHistory.objects.create(
+            player=self,
+            balance=self.balance
+        )
+
     def __str__(self):
         return f"{self.user.username} (Balance: ${self.balance})"
+
+class BalanceHistory(models.Model):
+    player = models.ForeignKey('Player', on_delete=models.CASCADE)
+    balance = models.IntegerField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['id']
 
 class Game(models.Model):
     GAME_STATUS_CHOICES = (

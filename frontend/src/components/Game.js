@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/Authentication';
+import { Link } from 'react-router-dom';
 import Card from './Card';
 import Betting from './Betting';
 import gameApi from '../services/api';
@@ -11,7 +12,7 @@ const Game = () => {
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
 
-    // Fetch player profile
+    // Fetches player profile and refreshes when game state changes
     useEffect(() => {
         const fetchProfile = async () => {
             try {
@@ -21,7 +22,7 @@ const Game = () => {
                 setError('Failed to load profile');
             }
         };
-        fetchProfile(); // Refresh profile when game state changes
+        fetchProfile();
     }, [game]); 
 
     const startNewGame = async (bet) => {
@@ -79,16 +80,22 @@ const Game = () => {
                         {profile && (
                             <div className="text-white">
                                 <p>{user.username}</p>
-                                <p>Balance: ${profile.balance}</p>
-                                <p>Games Won: {profile.games_won}/{profile.games_played}</p>
                             </div>
                         )}
-                        <button
-                            onClick={logout}
-                            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-                        >
-                            Logout
-                        </button>
+                        <div className="flex items-center space-x-4">
+                            <Link 
+                                to="/profile" 
+                                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                            >
+                                View Profile
+                            </Link>
+                            <button
+                                onClick={logout}
+                                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                            >
+                                Logout
+                            </button>
+                        </div>
                     </div>
                 </div>
 
