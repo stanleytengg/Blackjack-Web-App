@@ -35,7 +35,7 @@ const gameApi = {
 
     // Game-related endpoints
     createGame: async (bet) => {
-        const response = await api.post('/games/', { bet });
+        const response = await api.post('/games/', {bet});
         return response.data;
     },
 
