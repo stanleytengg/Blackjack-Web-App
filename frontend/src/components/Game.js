@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/Authentication';
-import { Link } from 'react-router-dom';
 import Card from './Card';
 import Betting from './Betting';
 import gameApi from '../services/api';
+import Profile from './Profile';
 
 const Game = () => {
-    const { user, logout } = useAuth();
+    const { logout } = useAuth();
     const [profile, setProfile] = useState(null);
     const [game, setGame] = useState(null);
     const [error, setError] = useState(null);
     const [loading, setLoading] = useState(false);
+    const [showProfile, setShowProfile] = useState(false);
 
     // Fetches player profile and refreshes when game state changes
     useEffect(() => {
@@ -77,25 +78,18 @@ const Game = () => {
                 <div className="flex justify-between items-center mb-8">
                     <h1 className="text-4xl font-bold text-white">Blackjack</h1>
                     <div className="flex items-center space-x-4">
-                        {profile && (
-                            <div className="text-white">
-                                <p>{user.username}</p>
-                            </div>
-                        )}
-                        <div className="flex items-center space-x-4">
-                            <Link 
-                                to="/profile" 
-                                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                            >
-                                View Profile
-                            </Link>
-                            <button
-                                onClick={logout}
-                                className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-                            >
-                                Logout
-                            </button>
-                        </div>
+                        <button
+                            onClick={() => setShowProfile(true)}
+                            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                        >
+                            View Profile
+                        </button>
+                        <button
+                            onClick={logout}
+                            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                        >
+                            Logout
+                        </button>
                     </div>
                 </div>
 
@@ -183,6 +177,12 @@ const Game = () => {
                         )}
                     </div>
                 )}
+
+                {/* Profile Window */}
+                <Profile 
+                    isOpen={showProfile} 
+                    onClose={() => setShowProfile(false)} 
+                />
             </div>
         </div>
     );
