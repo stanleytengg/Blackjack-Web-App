@@ -6,9 +6,14 @@ const Betting = ({ onPlaceBet, currentBalance, disabled }) => {
 
     // Can only place a bet that is less than or equal to the current balance
     const handleBetChange = (amount) => {
+        if (disabled) return;
         const newBet = Math.max(1, Math.min(amount, currentBalance));
         setbet(newBet);
         setError('');
+    };
+
+    const handleSliderChange = (e) => {
+        handleBetChange(parseInt(e.target.value));
     };
 
     const handleSubmit = () => {
@@ -44,6 +49,25 @@ const Betting = ({ onPlaceBet, currentBalance, disabled }) => {
                 </button>
             </div>
 
+            {/* Sliding bar */}
+            <div className="w-full px-2">
+                <input
+                    type="range"
+                    min="10"
+                    max={currentBalance}
+                    step="10"
+                    value={bet}
+                    onChange={handleSliderChange}
+                    disabled={disabled}
+                    className="w-full h-3 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                />
+                <div className="flex justify-between text-white text-sm mt-1">
+                    <span>$10</span>
+                    <span>${currentBalance}</span>
+                </div>
+            </div>
+
+            {/* Quick bet buttons */}
             <div className="flex space-x-4">
                 {[50, 100, 500].map((amount) => (
                     <button
