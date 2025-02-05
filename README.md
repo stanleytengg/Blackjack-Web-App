@@ -1,5 +1,5 @@
 # Blackjack Web Application
-This full-stack web application implements the class casino Blackjack game, built with Django and React.
+This full-stack web application implements the classic casino Blackjack game, built with Django and React.
 
 ## Features
 - User authentication system
